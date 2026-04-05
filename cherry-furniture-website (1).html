@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cherry Furniture — House of Quality Furniture</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CHERRY FURNITURE WEBSITE
+   ── Edit Guide: Search for "EDIT:" comments to find
+      all customizable text, colors, and images.
+   ============================================================ */
+
+/* EDIT: Brand Colors — change these to update the whole site */
+:root {
+  --cherry-red: #C0392B;
+  --cherry-dark: #1a0a08;
+  --cherry-cream: #FAF6F0;
+  --cherry-warm: #8B4513;
+  --cherry-gold: #C8860A;
+  --cherry-light: #F5EDE0;
+  --cherry-muted: #9B7B6A;
+  --nav-height: 80px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  background: var(--cherry-cream);
+  color: var(--cherry-dark);
+  overflow-x: hidden;
+}
+
+/* ─── NAVIGATION ─────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-height);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4rem;
+  background: rgba(250,246,240,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(192,57,43,0.12);
+  transition: box-shadow 0.3s;
+}
+
+nav.scrolled { box-shadow: 0 4px 30px rgba(26,10,8,0.08); }
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+/* SVG Logo mark */
+.logo-mark svg { width: 46px; height: 46px; }
+
+.logo-text {
+  line-height: 1;
+}
+
+.logo-text .brand {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--cherry-dark);
+  letter-spacing: 1px;
+}
+
+.logo-text .brand span { color: var(--cherry-red); }
+
+.logo-text .tagline {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--cherry-muted);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.nav-links a {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--cherry-dark);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.nav-links a:hover { opacity: 1; color: var(--cherry-red); }
+
+.nav-cta {
+  font-size: 10px !important;
+  letter-spacing: 2px !important;
+  padding: 10px 22px !important;
+  border: 1px solid var(--cherry-red) !important;
+  color: var(--cherry-red) !important;
+  opacity: 1 !important;
+  transition: all 0.3s !important;
+}
+
+.nav-cta:hover {
+  background: var(--cherry-red) !important;
+  color: white !important;
+}
+
+/* Mobile hamburger */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.hamburger span { width: 24px; height: 1.5px; background: var(--cherry-dark); transition: all 0.3s; }
+
+/* ─── HERO ───────────────────────────────────────────────── */
+.hero {
+  height: 100vh;
+  min-height: 650px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: var(--nav-height);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Decorative background pattern */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: 0;
+  bottom: 0;
+  width: 55%;
+  background: linear-gradient(135deg, #f0e4d4 0%, #e8d5c0 100%);
+  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Slideshow images on right side */
+.hero-slide {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 52%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.hero-slide.active { opacity: 1; }
+
+/* EDIT: Hero slideshow — replace these image paths with your photos */
+.hero-slide:nth-child(1) { background-image: url('WhatsApp_Image_2026-04-05_at_1_43_32_PM__1_.jpeg'); filter: brightness(0.92) saturate(1.1); }
+.hero-slide:nth-child(2) { background-image: url('WhatsApp_Image_2026-04-05_at_1_43_32_PM.jpeg'); filter: brightness(0.92) saturate(1.1); }
+.hero-slide:nth-child(3) { background-image: url('WhatsApp_Image_2026-04-05_at_1_42_37_PM.jpeg'); filter: brightness(0.92) saturate(1.1); }
+.hero-slide:nth-child(4) { background-image: url('WhatsApp_Image_2026-04-05_at_1_42_36_PM.jpeg'); filter: brightness(0.92) saturate(1.1); }
+
+.hero-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(250,246,240,0.8) 0%, rgba(250,246,240,0.1) 30%, rgba(26,10,8,0.2) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 6rem;
+  max-width: 560px;
+  animation: heroFadeIn 1.5s ease forwards;
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.hero-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--cherry-red);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--cherry-red);
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  line-height: 1.05;
+  color: var(--cherry-dark);
+  margin-bottom: 1.5rem;
+}
+
+/* EDIT: Hero headline — change this text */
+.hero h1 em {
+  font-style: italic;
+  color: var(--cherry-red);
+}
+
+.hero-desc {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  line-height: 1.9;
+  color: var(--cherry-muted);
+  margin-bottom: 2.5rem;
+  max-width: 380px;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 16px 38px;
+  background: var(--cherry-red);
+  color: white;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s;
+  margin-right: 16px;
+}
+
+.btn-primary:hover { background: #a93226; transform: translateY(-1px); }
+
+.btn-outline {
+  display: inline-block;
+  padding: 15px 38px;
+  border: 1px solid var(--cherry-dark);
+  color: var(--cherry-dark);
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover { background: var(--cherry-dark); color: white; }
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(192,57,43,0.15);
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--cherry-red);
+  display: block;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cherry-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* Slide dots */
+.hero-dots {
+  position: absolute;
+  bottom: 40px;
+  left: 6rem;
+  display: flex;
+  gap: 10px;
+  z-index: 3;
+}
+
+.hero-dot {
+  width: 24px;
+  height: 2px;
+  background: rgba(192,57,43,0.3);
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+.hero-dot.active { width: 48px; background: var(--cherry-red); }
+
+/* ─── FEATURES BAR ───────────────────────────────────────── */
+.features-bar {
+  background: var(--cherry-dark);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.feat-item {
+  padding: 2.2rem 2rem;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  transition: background 0.3s;
+}
+
+.feat-item:last-child { border-right: none; }
+.feat-item:hover { background: rgba(192,57,43,0.15); }
+
+.feat-icon {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 12px;
+  color: var(--cherry-red);
+}
+
+.feat-item h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #FAF6F0;
+  margin-bottom: 4px;
+}
+
+.feat-item p {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(250,246,240,0.4);
+}
+
+/* ─── SECTION COMMONS ────────────────────────────────────── */
+section { padding: 6rem 6rem; }
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--cherry-red);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: var(--cherry-dark);
+  line-height: 1.15;
+}
+
+.title-line {
+  width: 50px;
+  height: 2px;
+  background: var(--cherry-red);
+  margin: 1.2rem auto 0;
+}
+
+/* ─── COLLECTIONS ────────────────────────────────────────── */
+#collections { background: var(--cherry-cream); }
+
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.collection-card {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+  background: #e8d5c0;
+}
+
+.collection-card.wide { grid-column: span 2; aspect-ratio: 16/9; }
+
+.collection-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  filter: brightness(0.95) saturate(1.1);
+}
+
+.collection-card:hover img { transform: scale(1.06); }
+
+.collection-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(26,10,8,0.75) 100%);
+  transition: opacity 0.4s;
+}
+
+.collection-card:hover::after { opacity: 0.85; }
+
+.card-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 2;
+  padding: 2rem;
+  transform: translateY(8px);
+  transition: transform 0.4s ease;
+}
+
+.collection-card:hover .card-info { transform: translateY(0); }
+
+.card-info span {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--cherry-red);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.card-info h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: white;
+}
+
+/* ─── ABOUT ──────────────────────────────────────────────── */
+#about {
+  background: var(--cherry-light);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.about-images {
+  position: relative;
+  height: 520px;
+}
+
+.about-img-main {
+  position: absolute;
+  top: 0; left: 0;
+  width: 75%;
+  height: 85%;
+  object-fit: cover;
+  filter: brightness(0.98) saturate(1.05);
+}
+
+.about-img-accent {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 55%;
+  height: 55%;
+  object-fit: cover;
+  border: 6px solid var(--cherry-light);
+  filter: brightness(0.98) saturate(1.05);
+}
+
+.about-badge {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  background: var(--cherry-red);
+  color: white;
+  padding: 20px 24px;
+  text-align: center;
+  z-index: 2;
+}
+
+.about-badge .years {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1;
+  display: block;
+}
+
+.about-badge .badge-label {
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  display: block;
+}
+
+.about-text { padding-right: 2rem; }
+
+/* EDIT: About section text */
+.about-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--cherry-dark);
+  margin-bottom: 1.5rem;
+}
+
+.about-text p {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--cherry-muted);
+  margin-bottom: 1.2rem;
+}
+
+.about-list {
+  list-style: none;
+  margin: 2rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.about-list li {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--cherry-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-list li::before {
+  content: '';
+  width: 16px;
+  height: 1px;
+  background: var(--cherry-red);
+  flex-shrink: 0;
+}
+
+/* ─── SHOWROOM GALLERY ───────────────────────────────────── */
+#showroom { background: var(--cherry-dark); padding: 6rem; }
+
+#showroom .section-title { color: var(--cherry-cream); }
+#showroom .section-eyebrow { color: var(--cherry-red); }
+
+.gallery-masonry {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 260px);
+  gap: 12px;
+  margin-top: 3rem;
+}
+
+.g-item {
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.g-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+.g-item:nth-child(4) { grid-column: span 2; }
+
+.g-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+  filter: brightness(0.9) saturate(1.1);
+}
+
+.g-item:hover img { transform: scale(1.07); }
+
+.g-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(192,57,43,0);
+  transition: background 0.4s;
+}
+
+.g-item:hover::after { background: rgba(192,57,43,0.15); }
+
+/* ─── TESTIMONIALS ───────────────────────────────────────── */
+#testimonials { background: var(--cherry-cream); }
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.testimonial-card {
+  background: white;
+  padding: 2.5rem;
+  border-bottom: 3px solid var(--cherry-red);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(26,10,8,0.1);
+}
+
+.quote-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4rem;
+  color: var(--cherry-red);
+  line-height: 0.5;
+  margin-bottom: 1.5rem;
+  display: block;
+  opacity: 0.4;
+}
+
+.testimonial-card p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--cherry-dark);
+  margin-bottom: 1.5rem;
+}
+
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid rgba(26,10,8,0.08);
+  padding-top: 1.2rem;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cherry-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.reviewer-name {
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--cherry-dark);
+  display: block;
+}
+
+.reviewer-loc {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--cherry-muted);
+  display: block;
+}
+
+/* ─── CONTACT ────────────────────────────────────────────── */
+#contact {
+  background: var(--cherry-light);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.contact-info h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 300;
+  color: var(--cherry-dark);
+  margin-bottom: 1rem;
+}
+
+.contact-info > p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--cherry-muted);
+  margin-bottom: 2.5rem;
+}
+
+.contact-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 1.5rem;
+}
+
+.contact-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--cherry-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-icon svg { width: 18px; height: 18px; color: white; }
+
+.contact-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cherry-muted);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.contact-value {
+  font-size: 14px;
+  color: var(--cherry-dark);
+  font-weight: 400;
+}
+
+/* Contact form */
+.contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-group label {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--cherry-muted);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 14px 16px;
+  border: 1px solid rgba(26,10,8,0.15);
+  background: white;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 13px;
+  color: var(--cherry-dark);
+  outline: none;
+  transition: border-color 0.3s;
+  appearance: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--cherry-red);
+}
+
+.form-group textarea { resize: vertical; min-height: 120px; }
+
+.btn-submit {
+  padding: 16px;
+  background: var(--cherry-red);
+  color: white;
+  border: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-submit:hover { background: #a93226; }
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer {
+  background: var(--cherry-dark);
+  padding: 4rem 6rem 2rem;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(250,246,240,0.1);
+}
+
+.footer-brand .brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--cherry-cream);
+  margin-bottom: 4px;
+}
+
+.footer-brand .brand-name span { color: var(--cherry-red); }
+
+.footer-brand .tagline {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(250,246,240,0.35);
+  margin-bottom: 1.2rem;
+  display: block;
+}
+
+.footer-brand p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: rgba(250,246,240,0.5);
+  max-width: 240px;
+}
+
+.footer-col h5 {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cherry-red);
+  margin-bottom: 1.2rem;
+}
+
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+.footer-col ul li a {
+  font-size: 12px;
+  color: rgba(250,246,240,0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.footer-col ul li a:hover { color: var(--cherry-cream); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.footer-bottom p {
+  font-size: 11px;
+  color: rgba(250,246,240,0.3);
+  letter-spacing: 0.5px;
+}
+
+/* ─── WHATSAPP FLOAT ─────────────────────────────────────── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 200;
+  width: 56px;
+  height: 56px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 6px 24px rgba(37,211,102,0.4); }
+  50% { box-shadow: 0 6px 40px rgba(37,211,102,0.6); }
+}
+
+.whatsapp-float:hover { transform: scale(1.1); }
+
+.whatsapp-float svg { width: 28px; height: 28px; fill: white; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  nav { padding: 0 2rem; }
+  section { padding: 4rem 2.5rem; }
+  #contact, #about { grid-template-columns: 1fr; }
+  .about-images { height: 400px; margin-bottom: 2rem; }
+  footer { padding: 3rem 2.5rem 1.5rem; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .hero-content { padding: 0 3rem; }
+  .collections-grid { grid-template-columns: 1fr 1fr; }
+  .collection-card.wide { grid-column: span 2; }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cherry-cream); padding: 2rem; border-top: 1px solid rgba(192,57,43,0.1); gap: 1.5rem; }
+  .nav-links.open { display: flex; }
+  .hamburger { display: flex; }
+  .hero-slide { width: 100%; clip-path: none; opacity: 0; }
+  .hero-slide::after { background: rgba(250,246,240,0.6); }
+  .hero-content { padding: 0 1.5rem; }
+  .features-bar { grid-template-columns: 1fr 1fr; }
+  .collections-grid { grid-template-columns: 1fr; }
+  .collection-card.wide { grid-column: span 1; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .gallery-masonry { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .g-item:nth-child(1) { grid-column: span 2; grid-row: span 1; height: 220px; }
+  .g-item:nth-child(4) { grid-column: span 2; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero-dots { left: 1.5rem; }
+  footer { padding: 3rem 1.5rem 1.5rem; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVIGATION
+     EDIT: Change menu items, add/remove links
+════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <!-- SVG Logo — Cherry Furniture brand mark -->
+    <div class="logo-mark">
+      <svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Chair back -->
+        <rect x="14" y="6" width="4" height="20" rx="2" fill="#C0392B"/>
+        <rect x="28" y="6" width="4" height="20" rx="2" fill="#C0392B"/>
+        <!-- Chair seat -->
+        <rect x="10" y="23" width="26" height="6" rx="3" fill="#1a0a08"/>
+        <!-- Chair legs -->
+        <rect x="13" y="29" width="3" height="12" rx="1.5" fill="#1a0a08"/>
+        <rect x="30" y="29" width="3" height="12" rx="1.5" fill="#1a0a08"/>
+        <!-- Cherry fruit accents -->
+        <circle cx="9" cy="8" r="4" fill="#C0392B"/>
+        <circle cx="9" cy="8" r="2" fill="#a93226"/>
+        <circle cx="37" cy="8" r="4" fill="#C0392B"/>
+        <circle cx="37" cy="8" r="2" fill="#a93226"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="brand"><span>C</span>herry</span>
+      <span class="tagline">Furniture · Since 1980</span>
+    </div>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <!-- EDIT: Add or remove navigation links here -->
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#showroom">Showroom</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact" class="nav-cta">Visit Us</a></li>
+  </ul>
+
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO SECTION
+     EDIT: Change headline, description, stats
+════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <!-- EDIT: Replace image filenames with your actual photo filenames -->
+    <div class="hero-slide active"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+  </div>
+
+  <div class="hero-content">
+    <!-- EDIT: Eyebrow text above headline -->
+    <p class="hero-eyebrow">House of Quality Furniture</p>
+
+    <!-- EDIT: Main headline -->
+    <h1>Where Homes<br>Become <em>Beautiful</em><br>Spaces</h1>
+
+    <!-- EDIT: Description paragraph -->
+    <p class="hero-desc">
+      Since 1980, Cherry Furniture has been crafting and curating exceptional pieces that transform houses into cherished homes. Discover timeless designs built to last generations.
+    </p>
+
+    <div>
+      <a href="#collections" class="btn-primary">View Collections</a>
+      <a href="#contact" class="btn-outline">Visit Showroom</a>
+    </div>
+
+    <!-- EDIT: Stats — change numbers and labels -->
+    <div class="hero-stats">
+      <div>
+        <span class="stat-num">44+</span>
+        <span class="stat-label">Years of craft</span>
+      </div>
+      <div>
+        <span class="stat-num">5000+</span>
+        <span class="stat-label">Happy homes</span>
+      </div>
+      <div>
+        <span class="stat-num">200+</span>
+        <span class="stat-label">Unique designs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-dots" id="heroDots">
+    <div class="hero-dot active" onclick="goSlide(0)"></div>
+    <div class="hero-dot" onclick="goSlide(1)"></div>
+    <div class="hero-dot" onclick="goSlide(2)"></div>
+    <div class="hero-dot" onclick="goSlide(3)"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FEATURES BAR
+     EDIT: Change icons and feature labels
+════════════════════════════════════════════════════════ -->
+<div class="features-bar">
+  <!-- EDIT: Feature 1 -->
+  <div class="feat-item">
+    <svg class="feat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+    </svg>
+    <h4>Premium Quality</h4>
+    <p>Finest Materials</p>
+  </div>
+  <!-- EDIT: Feature 2 -->
+  <div class="feat-item">
+    <svg class="feat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+    </svg>
+    <h4>Custom Orders</h4>
+    <p>Made to Measure</p>
+  </div>
+  <!-- EDIT: Feature 3 -->
+  <div class="feat-item">
+    <svg class="feat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+    </svg>
+    <h4>Home Delivery</h4>
+    <p>Citywide Service</p>
+  </div>
+  <!-- EDIT: Feature 4 -->
+  <div class="feat-item">
+    <svg class="feat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+    </svg>
+    <h4>Warranty</h4>
+    <p>5-Year Guarantee</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     COLLECTIONS
+     EDIT: Change collection names and images
+════════════════════════════════════════════════════════ -->
+<section id="collections">
+  <div class="section-header">
+    <span class="section-eyebrow">Our Ranges</span>
+    <h2 class="section-title">Curated Collections<br>for Every Room</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="collections-grid">
+    <!-- EDIT: Card 1 — replace img src with your bedroom photo -->
+    <div class="collection-card wide">
+      <img src="WhatsApp_Image_2026-04-05_at_1_43_32_PM.jpeg" alt="Bedroom Collection" />
+      <div class="card-info">
+        <span>Bedroom Collection</span>
+        <h3>Restful Retreats</h3>
+      </div>
+    </div>
+
+    <!-- EDIT: Card 2 -->
+    <div class="collection-card">
+      <img src="WhatsApp_Image_2026-04-05_at_1_42_37_PM.jpeg" alt="Sofa Collection" />
+      <div class="card-info">
+        <span>Living Room</span>
+        <h3>Sofa & Seating</h3>
+      </div>
+    </div>
+
+    <!-- EDIT: Card 3 -->
+    <div class="collection-card">
+      <img src="WhatsApp_Image_2026-04-05_at_1_42_36_PM.jpeg" alt="Dining Collection" />
+      <div class="card-info">
+        <span>Dining Collection</span>
+        <h3>Dining Sets</h3>
+      </div>
+    </div>
+
+    <!-- EDIT: Card 4 — wide card -->
+    <div class="collection-card wide">
+      <img src="WhatsApp_Image_2026-04-05_at_1_43_32_PM__1_.jpeg" alt="Full Showroom" />
+      <div class="card-info">
+        <span>Full Range</span>
+        <h3>Explore Our Showroom</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ABOUT SECTION
+     EDIT: Change all text, images, and list items
+════════════════════════════════════════════════════════ -->
+<section id="about">
+  <div class="about-images">
+    <!-- EDIT: Replace image src paths -->
+    <img class="about-img-main" src="WhatsApp_Image_2026-04-05_at_1_43_32_PM__1_.jpeg" alt="Cherry Furniture Showroom" />
+    <img class="about-img-accent" src="WhatsApp_Image_2026-04-05_at_1_42_37_PM.jpeg" alt="Sofa Display" />
+    <div class="about-badge">
+      <!-- EDIT: Years in business -->
+      <span class="years">44</span>
+      <span class="badge-label">Years of<br>Excellence</span>
+    </div>
+  </div>
+
+  <div class="about-text">
+    <!-- EDIT: All text below -->
+    <span class="section-eyebrow">Our Story</span>
+    <h2>Crafting Quality<br>Since <em style="font-style:italic; color:var(--cherry-red);">1980</em></h2>
+    <p>
+      Cherry Furniture was founded with a single vision: to bring exceptional craftsmanship and timeless design to every home. From our showroom in Hyderabad, we've served thousands of families across Sindh.
+    </p>
+    <p>
+      Every piece in our collection is carefully crafted using premium materials. Whether you're furnishing a complete home or looking for that one statement piece, our experienced team is here to guide you.
+    </p>
+
+    <!-- EDIT: Feature list items -->
+    <ul class="about-list">
+      <li>Solid Wood Construction</li>
+      <li>Imported Fabrics</li>
+      <li>Custom Dimensions</li>
+      <li>Polish & Lacquer Finish</li>
+      <li>Marble & Granite Tops</li>
+      <li>Free Installation</li>
+    </ul>
+
+    <a href="#contact" class="btn-primary">Get in Touch</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SHOWROOM GALLERY
+════════════════════════════════════════════════════════ -->
+<section id="showroom">
+  <div class="section-header">
+    <span class="section-eyebrow">Visit Us</span>
+    <h2 class="section-title">Step Inside<br>Our Showroom</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="gallery-masonry">
+    <!-- EDIT: Replace these image paths -->
+    <div class="g-item">
+      <img src="WhatsApp_Image_2026-04-05_at_1_43_32_PM__1_.jpeg" alt="Main Hall" />
+    </div>
+    <div class="g-item">
+      <img src="WhatsApp_Image_2026-04-05_at_1_43_32_PM.jpeg" alt="Bedroom Display" />
+    </div>
+    <div class="g-item">
+      <img src="WhatsApp_Image_2026-04-05_at_1_42_37_PM.jpeg" alt="Sofa Area" />
+    </div>
+    <div class="g-item">
+      <img src="WhatsApp_Image_2026-04-05_at_1_42_36_PM.jpeg" alt="Dining Display" />
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     TESTIMONIALS
+     EDIT: Add your own customer reviews
+════════════════════════════════════════════════════════ -->
+<section id="testimonials">
+  <div class="section-header">
+    <span class="section-eyebrow">Customer Reviews</span>
+    <h2 class="section-title">What Our Clients Say</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="testimonials-grid">
+    <!-- EDIT: Testimonial 1 — change quote, name, location -->
+    <div class="testimonial-card">
+      <span class="quote-mark">"</span>
+      <p>Exceptional quality and beautiful craftsmanship. Our bedroom set from Cherry Furniture is still as stunning as the day we bought it, five years later.</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">SA</div>
+        <div>
+          <span class="reviewer-name">Salman Ahmed</span>
+          <span class="reviewer-loc">Hyderabad, Sindh</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT: Testimonial 2 -->
+    <div class="testimonial-card">
+      <span class="quote-mark">"</span>
+      <p>The team helped us design a custom dining set that fit perfectly in our space. The attention to detail is remarkable. Highly recommended!</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">FR</div>
+        <div>
+          <span class="reviewer-name">Fatima Raza</span>
+          <span class="reviewer-loc">Karachi</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT: Testimonial 3 -->
+    <div class="testimonial-card">
+      <span class="quote-mark">"</span>
+      <p>We furnished our entire home from Cherry Furniture. The staff was incredibly helpful and delivery was prompt. Will always be our first choice.</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">MK</div>
+        <div>
+          <span class="reviewer-name">Muhammad Khan</span>
+          <span class="reviewer-loc">Hyderabad</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CONTACT SECTION
+     EDIT: Update all contact details
+════════════════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact-info">
+    <span class="section-eyebrow">Get In Touch</span>
+    <h2>Visit Our<br>Showroom Today</h2>
+    <p>We'd love to help you find the perfect furniture for your home. Visit us, call, or send a message and our team will be happy to assist.</p>
+
+    <!-- EDIT: Address -->
+    <div class="contact-detail">
+      <div class="contact-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </div>
+      <div>
+        <span class="contact-label">Address</span>
+        <!-- EDIT: Your full address here -->
+        <span class="contact-value">Main Market, Hyderabad, Sindh, Pakistan</span>
+      </div>
+    </div>
+
+    <!-- EDIT: Phone number -->
+    <div class="contact-detail">
+      <div class="contact-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+      </div>
+      <div>
+        <span class="contact-label">Phone / WhatsApp</span>
+        <!-- EDIT: Your phone number -->
+        <span class="contact-value">+92 300 000 0000</span>
+      </div>
+    </div>
+
+    <!-- EDIT: Opening hours -->
+    <div class="contact-detail">
+      <div class="contact-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div>
+        <span class="contact-label">Opening Hours</span>
+        <span class="contact-value">Sat–Thu: 10am – 9pm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <form class="contact-form" onsubmit="submitForm(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" placeholder="Ahmed Khan" required />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+92 300 000 0000" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>What are you looking for?</label>
+      <!-- EDIT: Add/remove dropdown options -->
+      <select>
+        <option>Bedroom Set</option>
+        <option>Sofa / Living Room</option>
+        <option>Dining Table & Chairs</option>
+        <option>Wardrobe / Cupboard</option>
+        <option>Custom Order</option>
+        <option>Complete Home Package</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Your Message</label>
+      <textarea placeholder="Tell us about your requirements, budget, or any specific design preferences..."></textarea>
+    </div>
+    <button type="submit" class="btn-submit">Send Enquiry →</button>
+  </form>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     EDIT: Update links, contact info, social media
+════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="brand-name"><span>C</span>herry Furniture</div>
+      <span class="tagline">House of Quality Furniture · Since 1980</span>
+      <!-- EDIT: Footer description -->
+      <p>Bringing timeless craftsmanship and beautiful design to homes across Hyderabad and beyond since 1980.</p>
+    </div>
+
+    <div class="footer-col">
+      <h5>Collections</h5>
+      <!-- EDIT: Collection links -->
+      <ul>
+        <li><a href="#collections">Bedroom Sets</a></li>
+        <li><a href="#collections">Sofa & Seating</a></li>
+        <li><a href="#collections">Dining Tables</a></li>
+        <li><a href="#collections">Wardrobes</a></li>
+        <li><a href="#collections">Custom Orders</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#showroom">Our Showroom</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <!-- EDIT: Replace with real contact info -->
+        <li><a href="tel:+92300000000">+92 300 000 0000</a></li>
+        <li><a href="https://wa.me/923000000000">WhatsApp Us</a></li>
+        <li><a href="#">Hyderabad, Sindh</a></li>
+        <li><a href="#">Sat–Thu: 10am–9pm</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <!-- EDIT: Copyright year and name -->
+    <p>© 2024 Cherry Furniture. All rights reserved.</p>
+    <p>House of Quality Furniture · Hyderabad, Sindh</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     WHATSAPP FLOATING BUTTON
+     EDIT: Replace 923000000000 with your actual number
+════════════════════════════════════════════════════════ -->
+<a href="https://wa.me/923000000000" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════ -->
+<script>
+// ── Slideshow ──────────────────────────────────────────
+let currentSlide = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.hero-dot');
+
+function goSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+setInterval(() => goSlide((currentSlide + 1) % slides.length), 4500);
+
+// ── Navbar scroll effect ───────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── Mobile menu ────────────────────────────────────────
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// ── Contact form ───────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault();
+  // EDIT: Replace with your WhatsApp number or email handling
+  alert('Thank you for your enquiry! We will contact you shortly on WhatsApp.');
+}
+</script>
+
+</body>
+</html>
