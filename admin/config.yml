@@ -1,0 +1,17 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+
+collections:
+  - name: "info"
+    label: "Site Content"
+    files:
+      - label: "Contact Info"
+        name: "contact"
+        file: "data/info.json"
+        fields:
+          - {label: "Phone", name: "phone", widget: "string"}
+          - {label: "Address", name: "address", widget: "string"}
+          - {label: "WhatsApp", name: "whatsapp", widget: "string"}
