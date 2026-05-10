@@ -2,7 +2,7 @@ backend:
   name: github
   repo: hrajput328/Cherry-furniture
   branch: main
-  base_url: https://sveltia-cms-auth.pages.dev
+  auth_type: pkce
 
 media_folder: "images/uploads"
 
