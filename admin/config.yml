@@ -1,17 +1,11 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: hrajput328/Cherry-furniture
   branch: main
 
-media_folder: "images"
+media_folder: "images/uploads"
 
 collections:
-  - name: "info"
-    label: "Site Content"
-    files:
-      - label: "Contact Info"
-        name: "contact"
-        file: "data/info.json"
-        fields:
-          - {label: "Phone", name: "phone", widget: "string"}
-          - {label: "Address", name: "address", widget: "string"}
-          - {label: "WhatsApp", name: "whatsapp", widget: "string"}
+  - name: "pages"
+    label: "Pages"
+    files: []
