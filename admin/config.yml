@@ -3,6 +3,7 @@ backend:
   repo: hrajput328/Cherry-furniture
   branch: main
   auth_type: pkce
+  app_id: 0v231iqWePj90LDjaaCm
 
 media_folder: "images/uploads"
 
