@@ -1,22 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: hrajput328/Cherry-furniture
   branch: main
-
-local_backend: true
-
-media_folder: "images/uploads"
-public_folder: "/images/uploads"
-
-collections:
-  - name: "products"
-    label: "Products"
-    folder: "content/products"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Product Name", name: "title", widget: "string" }
-      - { label: "Price ($)", name: "price", widget: "number", value_type: "float" }
-      - { label: "Main Product Image", name: "image", widget: "image" }
-      - { label: "Description", name: "body", widget: "markdown" }
-      - { label: "Dimensions", name: "dimensions", widget: "string", required: false }
-      - { label: "In Stock", name: "in_stock", widget: "boolean", default: true }
+  base_url: https://api.decapbridge.com
+  auth_endpoint: /oauth/auth
