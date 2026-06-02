@@ -30,3 +30,19 @@ logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 
 # Add site links in Decap CMS (optional)
 site_url: https://www.cherryinterior.store
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "products"
+    label: "Products"
+    folder: "content/products"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Product Name", name: "title", widget: "string" }
+      - { label: "Price ($)", name: "price", widget: "number", value_type: "float" }
+      - { label: "Main Product Image", name: "image", widget: "image" }
+      - { label: "Description", name: "body", widget: "markdown" }
+      - { label: "Dimensions", name: "dimensions", widget: "string", required: false }
+      - { label: "In Stock", name: "in_stock", widget: "boolean", default: true }
