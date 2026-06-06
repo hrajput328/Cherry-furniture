@@ -1,6 +1,7 @@
 # Use DecapBridge PKCE auth (required)
 backend:
-  name: git-gateway
+  name: decap-bridge
+  id: 0705980d-d68c-4bd0-bd92-f89e5b21503a
   repo: hrajput328/Cherry-furniture
   branch: main
   auth_type: pkce
