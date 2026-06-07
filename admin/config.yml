@@ -40,9 +40,10 @@ collections:
     folder: "content/products"
     create: true
     slug: "{{slug}}"
+    format: "json"
     fields:
       - { label: "Product Name", name: "title", widget: "string" }
-      - { label: "Price ($)", name: "price", widget: "number", value_type: "float" }
+      - { label: "Price (Rs.)", name: "price", widget: "number", value_type: "int" }
       - { label: "Main Product Image", name: "image", widget: "image" }
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Dimensions", name: "dimensions", widget: "string", required: false }
