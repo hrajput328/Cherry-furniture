@@ -1,5 +1,5 @@
 ---
-title: The Heritage Teak Panel Bed
+title: The Heritage Teak Panel Bed Side tables
 price: 150000
 image: /images/uploads/whatsapp-image-2026-04-05-at-5.26.54-pm.jpeg
 dimensions: ""
