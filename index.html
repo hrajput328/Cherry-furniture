@@ -492,6 +492,112 @@ section { padding: 6rem 6rem; }
   color: white;
 }
 
+/* ─── PRODUCTS (live from CMS — data/products.json) ──────── */
+#products { background: var(--cherry-light); }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.products-empty {
+  text-align: center;
+  color: var(--cherry-muted);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+}
+
+.product-card {
+  background: var(--cherry-cream);
+  border: 1px solid rgba(26,10,8,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(26,10,8,0.10);
+}
+
+.product-img-wrap {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+
+.product-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.product-card:hover .product-img-wrap img { transform: scale(1.06); }
+
+.product-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--cherry-red);
+  color: white;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+}
+
+.product-info {
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+.product-info h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--cherry-dark);
+}
+
+.product-price {
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  color: var(--cherry-red);
+}
+
+.product-desc {
+  font-size: 0.85rem;
+  color: var(--cherry-muted);
+  line-height: 1.7;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-line;
+}
+
+.product-dims {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cherry-muted);
+}
+
+.product-cta {
+  text-align: center;
+  margin-top: 0.5rem;
+  padding: 12px 24px;
+}
+
 /* ─── ABOUT ──────────────────────────────────────────────── */
 #about {
   background: var(--cherry-light);
@@ -938,6 +1044,7 @@ footer {
   .hero-content { padding: 0 3rem; }
   .collections-grid { grid-template-columns: 1fr 1fr; }
   .collection-card.wide { grid-column: span 2; }
+  .products-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
@@ -950,6 +1057,7 @@ footer {
   .features-bar { grid-template-columns: 1fr 1fr; }
   .collections-grid { grid-template-columns: 1fr; }
   .collection-card.wide { grid-column: span 1; }
+  .products-grid { grid-template-columns: 1fr; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .gallery-masonry { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
   .g-item:nth-child(1) { grid-column: span 2; grid-row: span 1; height: 220px; }
@@ -989,6 +1097,7 @@ footer {
 
   <ul class="nav-links" id="navLinks">
     <li><a href="#collections">Collections</a></li>
+    <li><a href="#products">Shop</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#showroom">Showroom</a></li>
     <li><a href="#testimonials">Reviews</a></li>
@@ -1135,6 +1244,21 @@ footer {
         <h3>Explore Our Showroom</h3>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRODUCTS — live from data/products.json (edit via CMS)
+════════════════════════════════════════════════════════ -->
+<section id="products">
+  <div class="section-header">
+    <span class="section-eyebrow">Shop Online</span>
+    <h2 class="section-title">Our Products</h2>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="products-grid" id="productsGrid">
+    <div class="products-empty">Loading products…</div>
   </div>
 </section>
 
@@ -1428,6 +1552,49 @@ function filterCatalog(category, buttonElement) {
 function submitForm(e) {
   e.preventDefault();
   alert('Thank you for your enquiry! We will contact you shortly on WhatsApp.');
+}
+
+// ── Products — loaded live from data/products.json (edited via CMS) ──
+fetch('/data/products.json?v=' + Date.now())
+  .then(res => {
+    if (!res.ok) throw new Error('not found');
+    return res.json();
+  })
+  .then(data => {
+    const grid = document.getElementById('productsGrid');
+    const items = (data && data.items) || [];
+    if (!items.length) {
+      grid.innerHTML = '<div class="products-empty">New products coming soon — check back shortly.</div>';
+      return;
+    }
+    grid.innerHTML = items.slice().reverse().map(p => {
+      const price = 'Rs. ' + (Number(p.price) || 0).toLocaleString('en-PK');
+      const img = p.image || 'WhatsApp_Image_2026-04-05_at_1_43_32_PM.jpeg';
+      const badge = p.in_stock === false ? '<span class="product-badge">Out of Stock</span>' : '';
+      const dims = p.dimensions ? `<div class="product-dims">${escapeHtml(p.dimensions)}</div>` : '';
+      const waMsg = encodeURIComponent('Hi! I am interested in: ' + p.title);
+      return `<div class="product-card">
+        <div class="product-img-wrap">
+          <img src="${img}" alt="${escapeHtml(p.title || '')}" loading="lazy" />
+          ${badge}
+        </div>
+        <div class="product-info">
+          <h3>${escapeHtml(p.title || '')}</h3>
+          <div class="product-price">${price}</div>
+          ${dims}
+          <p class="product-desc">${escapeHtml(p.description || '')}</p>
+          <a href="https://wa.me/923133114350?text=${waMsg}" target="_blank" class="btn-outline product-cta">Inquire on WhatsApp</a>
+        </div>
+      </div>`;
+    }).join('');
+  })
+  .catch(() => {
+    const grid = document.getElementById('productsGrid');
+    if (grid) grid.innerHTML = '<div class="products-empty">New products coming soon — check back shortly.</div>';
+  });
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 </script>
 
