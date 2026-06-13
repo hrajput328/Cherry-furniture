@@ -37,14 +37,21 @@ public_folder: "/images/uploads"
 collections:
   - name: "products"
     label: "Products"
-    folder: "content/products"
-    create: true
-    slug: "{{slug}}"
-    format: "json"
-    fields:
-      - { label: "Product Name", name: "title", widget: "string" }
-      - { label: "Price (Rs.)", name: "price", widget: "number", value_type: "int" }
-      - { label: "Main Product Image", name: "image", widget: "image" }
-      - { label: "Description", name: "body", widget: "markdown" }
-      - { label: "Dimensions", name: "dimensions", widget: "string", required: false }
-      - { label: "In Stock", name: "in_stock", widget: "boolean", default: true }
+    files:
+      - file: "data/products.json"
+        name: "products"
+        label: "Shop / Products"
+        description: "Everything you add here shows up live in the 'Our Products' section on the website — no rebuild needed."
+        fields:
+          - name: "items"
+            label: "Products"
+            widget: "list"
+            label_singular: "Product"
+            summary: "{{fields.title}} — Rs. {{fields.price}}"
+            fields:
+              - { label: "Product Name", name: "title", widget: "string" }
+              - { label: "Price (Rs.)", name: "price", widget: "number", value_type: "int" }
+              - { label: "Main Product Image", name: "image", widget: "image" }
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Dimensions", name: "dimensions", widget: "string", required: false }
+              - { label: "In Stock", name: "in_stock", widget: "boolean", default: true }
