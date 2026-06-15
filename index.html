@@ -1597,6 +1597,14 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 </script>
-
+  fetch('/data/products.json')
+    .then(response => response.json())
+    .then(data => {
+      console.log("Cherry Furniture Data loaded:", data);
+      // If you have a custom product rendering function, call it here:
+      if (typeof renderProducts === 'function') { renderProducts(data); }
+    })
+    .catch(err => console.error("Error reading repository data:", err));
+</script>
 </body>
 </html>
