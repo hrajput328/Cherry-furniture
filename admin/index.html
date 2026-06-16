@@ -1,10 +1,1321 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Cherry Furniture CMS</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cherry Admin — cherryinterior.store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Josefin+Sans:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ──────────────────────────────────────────────────── */
+:root{
+  --red:#C0392B;--dark:#1A0A08;--cream:#FAF6F0;--warm:#F0E8DC;
+  --gold:#B8860B;--muted:#8B7355;--border:#DDD5C8;--green:#2E7D32;
+  --blue:#1565C0;--orange:#E65100;
+  --font-display:'Cormorant Garamond',serif;
+  --font-ui:'Josefin Sans',sans-serif;
+  --font-code:'Fira Code',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-ui);background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden}
+
+/* ── LOGIN ───────────────────────────────────────────────────── */
+#login-screen{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:0}
+.login-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:3rem 2.5rem;width:400px;max-width:90vw}
+.login-logo{font-family:var(--font-display);font-size:2.2rem;font-weight:700;color:var(--red);letter-spacing:-1px;text-align:center;margin-bottom:.25rem}
+.login-sub{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:center;margin-bottom:2rem}
+.login-box label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);display:block;margin-bottom:6px}
+.login-box input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:white;padding:10px 14px;font-family:var(--font-ui);font-size:13px;outline:none;margin-bottom:1rem;transition:.2s}
+.login-box input:focus{border-color:var(--red)}
+.login-btn{width:100%;background:var(--red);color:white;border:none;padding:12px;font-family:var(--font-ui);font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:.2s}
+.login-btn:hover{background:#A93226}
+.login-err{color:#E74C3C;font-size:10px;margin-top:.5rem;display:none}
+
+/* ── APP SHELL ───────────────────────────────────────────────── */
+#app{display:none;min-height:100vh;flex-direction:column}
+#app.visible{display:flex}
+
+/* ── TOPBAR ──────────────────────────────────────────────────── */
+.topbar{height:52px;background:var(--dark);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--red)}
+.topbar-logo{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--red);letter-spacing:-0.5px}
+.topbar-logo span{color:rgba(255,255,255,.3);font-size:.7rem;font-family:var(--font-ui);letter-spacing:1px;font-weight:300;margin-left:6px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:.75rem}
+.gh-status{font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+.gh-status.connected{background:rgba(46,125,50,.25);color:#81C784}
+.gh-status.error{background:rgba(192,57,43,.2);color:#EF9A9A}
+.topbar-btn{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-family:var(--font-ui);font-size:10px;letter-spacing:1px;padding:5px 12px;cursor:pointer;transition:.2s;text-transform:uppercase}
+.topbar-btn:hover{border-color:var(--red);color:white}
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
+.sidebar{width:220px;background:#140806;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;padding:1.5rem 0;overflow-y:auto;flex-shrink:0}
+.sidebar-section{margin-bottom:1.5rem}
+.sidebar-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 1.2rem;margin-bottom:.5rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1.2rem;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);cursor:pointer;transition:.15s;border-left:2px solid transparent}
+.nav-item:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.04)}
+.nav-item.active{color:white;background:rgba(192,57,43,.15);border-left-color:var(--red)}
+.nav-icon{width:14px;height:14px;opacity:.6;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+
+/* ── MAIN ────────────────────────────────────────────────────── */
+.main{flex:1;overflow-y:auto;background:var(--cream)}
+.page{display:none;padding:2rem;min-height:calc(100vh - 52px)}
+.page.active{display:block}
+
+/* ── PAGE HEADER ─────────────────────────────────────────────── */
+.page-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.page-hdr h1{font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--dark);letter-spacing:-0.5px}
+.page-hdr small{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px}
+
+/* ── CARDS ───────────────────────────────────────────────────── */
+.card{background:white;border:1px solid var(--border);margin-bottom:1rem}
+.card-hdr{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.card-hdr h3{font-family:var(--font-display);font-size:1.1rem;font-weight:600}
+.card-body{padding:1.5rem}
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-ui);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border:none;cursor:pointer;transition:.2s;border-radius:0}
+.btn-red{background:var(--red);color:white}
+.btn-red:hover{background:#A93226}
+.btn-dark{background:var(--dark);color:white}
+.btn-dark:hover{background:#2c1410}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:#1B5E20}
+.btn-outline{background:transparent;color:var(--dark);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--dark);background:var(--warm)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid transparent;font-size:9px;padding:6px 10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+.btn-ghost:hover{color:var(--red)}
+.btn-sm{padding:5px 12px;font-size:8px}
+
+/* ── FORMS ───────────────────────────────────────────────────── */
+.form-group{margin-bottom:1.2rem}
+.form-group label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1px solid var(--border);font-family:var(--font-ui);font-size:12px;color:var(--dark);background:white;outline:none;transition:.2s;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.08)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+
+/* ── GRID LISTS ──────────────────────────────────────────────── */
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem}
+.item-card{background:white;border:1px solid var(--border);transition:.2s;position:relative}
+.item-card:hover{border-color:var(--red);box-shadow:0 4px 20px rgba(192,57,43,.08)}
+.item-card-img{width:100%;height:160px;object-fit:cover;background:#f5f0eb;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:2rem}
+.item-card-img img{width:100%;height:100%;object-fit:cover}
+.item-card-body{padding:1rem}
+.item-card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:.25rem}
+.item-card-meta{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.item-card-actions{display:flex;gap:6px;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+.item-card-badge{font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;background:var(--warm)}
+
+/* ── TABLE ───────────────────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{padding:8px 12px;text-align:left;background:var(--dark);color:rgba(255,255,255,.7);font-size:8px;letter-spacing:2px;text-transform:uppercase;font-weight:400}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--warm)}
+
+/* ── EDITOR ──────────────────────────────────────────────────── */
+.editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--warm);border:1px solid var(--border);border-bottom:none}
+.editor-toolbar button{background:white;border:1px solid var(--border);padding:4px 10px;font-family:var(--font-ui);font-size:9px;letter-spacing:1px;cursor:pointer;transition:.15s;text-transform:uppercase}
+.editor-toolbar button:hover{background:var(--dark);color:white;border-color:var(--dark)}
+.editor-area{width:100%;min-height:320px;padding:1rem;border:1px solid var(--border);font-family:var(--font-ui);font-size:13px;line-height:1.7;resize:vertical;outline:none;background:white}
+.editor-area:focus{border-color:var(--red)}
+
+/* ── COMMIT PANEL ────────────────────────────────────────────── */
+.commit-bar{position:sticky;bottom:0;background:var(--dark);border-top:2px solid var(--red);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;z-index:50}
+.commit-input{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:white;padding:8px 14px;font-family:var(--font-ui);font-size:11px;outline:none}
+.commit-input:focus{border-color:var(--red)}
+.commit-info{font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.4);text-transform:uppercase}
+
+/* ── PROGRESS ────────────────────────────────────────────────── */
+.progress-bar{height:3px;background:rgba(255,255,255,.1);margin-bottom:0}
+.progress-fill{height:100%;background:var(--red);width:0%;transition:.3s}
+
+/* ── ALERTS ──────────────────────────────────────────────────── */
+.alert{padding:.75rem 1rem;margin-bottom:1rem;font-size:11px;border-left:3px solid}
+.alert-green{background:#E8F5E9;border-color:var(--green);color:#2E7D32}
+.alert-red{background:#FFEBEE;border-color:var(--red);color:var(--red)}
+.alert-blue{background:#E3F2FD;border-color:var(--blue);color:var(--blue)}
+
+/* ── BADGE ───────────────────────────────────────────────────── */
+.badge{display:inline-block;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px}
+.badge-green{background:#E8F5E9;color:#2E7D32}
+.badge-orange{background:#FFF3E0;color:#E65100}
+.badge-red{background:#FFEBEE;color:#C62828}
+.badge-blue{background:#E3F2FD;color:#1565C0}
+.badge-gray{background:#F5F5F5;color:#757575}
+
+/* ── GITHUB SETUP ────────────────────────────────────────────── */
+.setup-steps{counter-reset:steps}
+.setup-step{counter-increment:steps;display:flex;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid var(--border)}
+.setup-step:last-child{border:none}
+.step-num{width:32px;height:32px;background:var(--red);color:white;font-family:var(--font-display);font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-body h4{font-family:var(--font-display);font-size:1.1rem;margin-bottom:.5rem}
+.step-body p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.75rem}
+.code-snippet{font-family:var(--font-code);font-size:11px;background:var(--dark);color:#A9DFBF;padding:.6rem 1rem;margin:.5rem 0;display:block;border-left:3px solid var(--red)}
+
+/* ── MODAL ───────────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,10,8,.75);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:white;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column}
+.modal-lg{max-width:860px}
+.modal-hdr{padding:1.25rem 1.5rem;background:var(--dark);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.modal-hdr h3{font-family:var(--font-display);color:white;font-size:1.3rem;font-weight:600}
+.modal-x{background:none;border:none;color:rgba(255,255,255,.5);font-size:1.2rem;cursor:pointer;padding:0 4px;line-height:1}
+.modal-x:hover{color:white}
+.modal-body{padding:1.5rem;flex:1}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem;flex-shrink:0}
+
+/* ── IMAGE UPLOAD ────────────────────────────────────────────── */
+.img-upload-zone{border:2px dashed var(--border);padding:2rem;text-align:center;cursor:pointer;transition:.2s;background:var(--warm)}
+.img-upload-zone:hover{border-color:var(--red);background:#fdf0ee}
+.img-upload-zone.drag-over{border-color:var(--red);background:#fdf0ee}
+.img-preview{width:100%;max-height:240px;object-fit:cover;display:none;margin-top:.75rem}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .form-row,.form-row-3{grid-template-columns:1fr}
+}
+
+/* ── MISC ────────────────────────────────────────────────────── */
+.sep{height:1px;background:var(--border);margin:1.5rem 0}
+.text-muted{color:var(--muted);font-size:11px}
+.text-red{color:var(--red)}
+.fw-600{font-weight:600}
+select option{font-family:var(--font-ui)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-state .empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.3}
+.empty-state h3{font-family:var(--font-display);font-size:1.4rem;margin-bottom:.5rem;color:var(--dark)}
+.empty-state p{font-size:12px;line-height:1.6}
+</style>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Cherry</div>
+    <div class="login-sub">Admin Panel — cherryinterior.store</div>
+    <div>
+      <label>Password</label>
+      <input type="password" id="a-pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
+      <button class="login-btn" onclick="doAdminLogin()">Enter Panel →</button>
+      <div class="login-err" id="a-err">Incorrect password.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ════════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">Cherry <span>Admin Panel</span></div>
+    <div class="progress-bar" style="position:absolute;bottom:0;left:0;right:0"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="topbar-right">
+      <span class="gh-status" id="gh-status">⚪ Not Connected</span>
+      <button class="topbar-btn" onclick="showPage('github')">GitHub</button>
+      <button class="topbar-btn" onclick="if(confirm('Sign out?')){localStorage.removeItem('cherry_auth');document.getElementById('app').classList.remove('visible');document.getElementById('login-screen').style.display='flex';}">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Content</div>
+        <div class="nav-item active" onclick="showPage('dashboard')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Dashboard
+        </div>
+        <div class="nav-item" onclick="showPage('catalogue')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          Catalogue
+        </div>
+        <div class="nav-item" onclick="showPage('blog')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Blog Posts
+        </div>
+        <div class="nav-item" onclick="showPage('gallery')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Gallery
+        </div>
+        <div class="nav-item" onclick="showPage('pages')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Pages
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Site</div>
+        <div class="nav-item" onclick="showPage('media')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          Media Files
+        </div>
+        <div class="nav-item" onclick="showPage('settings')">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Site Settings
+        </div>
+        <div class="nav-item" onclick="showPage('github')">
+          <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          GitHub Connect
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-hdr">
+          <div><h1>Dashboard</h1><small>cherryinterior.store</small></div>
+          <a href="https://cherryinterior.store" target="_blank" class="btn btn-outline">↗ View Live Site</a>
+        </div>
+        <div id="dash-alerts"></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
+          <div class="card" style="cursor:pointer" onclick="showPage('catalogue')">
+            <div class="card-body" style="padding:1.25rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">🛋️</div>
+              <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:600" id="dash-catalogue-count">0</div>
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Products</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="showPage('blog')">
+            <div class="card-body" style="padding:1.25rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">📝</div>
+              <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:600" id="dash-blog-count">0</div>
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Blog Posts</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="showPage('gallery')">
+            <div class="card-body" style="padding:1.25rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">🖼️</div>
+              <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:600" id="dash-gallery-count">0</div>
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Gallery Images</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" style="padding:1.25rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">📅</div>
+              <div style="font-family:var(--font-display);font-size:.9rem;font-weight:600" id="dash-last-push">—</div>
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Last Published</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><h3>Quick Actions</h3></div>
+          <div class="card-body" style="display:flex;flex-wrap:wrap;gap:.75rem">
+            <button class="btn btn-red" onclick="openModal('product-modal');clearProductForm()">+ New Product</button>
+            <button class="btn btn-dark" onclick="openModal('blog-modal');clearBlogForm()">+ New Blog Post</button>
+            <button class="btn btn-outline" onclick="showPage('settings')">Edit Site Info</button>
+            <button class="btn btn-outline" onclick="showPage('github')">GitHub Settings</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><h3>Recent Activity</h3></div>
+          <div class="card-body" id="dash-activity">
+            <div class="text-muted">No activity yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CATALOGUE ── -->
+      <div class="page" id="page-catalogue">
+        <div class="page-hdr">
+          <div><h1>Catalogue</h1><small>Products & Furniture Items</small></div>
+          <div style="display:flex;gap:.75rem">
+            <input type="text" placeholder="Search products..." oninput="filterCatalogue(this.value)" style="padding:7px 12px;border:1px solid var(--border);font-family:var(--font-ui);font-size:11px;width:200px"/>
+            <select onchange="filterCatalogueCategory(this.value)" style="padding:7px 10px;border:1px solid var(--border);font-family:var(--font-ui);font-size:11px">
+              <option value="">All Categories</option>
+              <option>Bedroom</option><option>Dining</option><option>Living Room</option>
+              <option>Wardrobe</option><option>Office</option><option>Kids</option><option>Custom</option>
+            </select>
+            <button class="btn btn-red" onclick="openModal('product-modal');clearProductForm()">+ Add Product</button>
+          </div>
+        </div>
+        <div id="catalogue-grid" class="item-grid"></div>
+      </div>
+
+      <!-- ── BLOG ── -->
+      <div class="page" id="page-blog">
+        <div class="page-hdr">
+          <div><h1>Blog Posts</h1><small>Articles & News</small></div>
+          <button class="btn btn-red" onclick="openModal('blog-modal');clearBlogForm()">+ New Post</button>
+        </div>
+        <div id="blog-list"></div>
+      </div>
+
+      <!-- ── GALLERY ── -->
+      <div class="page" id="page-gallery">
+        <div class="page-hdr">
+          <div><h1>Gallery</h1><small>Showroom & Project Photos</small></div>
+          <button class="btn btn-red" onclick="openModal('gallery-modal')">+ Upload Image</button>
+        </div>
+        <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-top:1rem"></div>
+      </div>
+
+      <!-- ── PAGES ── -->
+      <div class="page" id="page-pages">
+        <div class="page-hdr">
+          <div><h1>Site Pages</h1><small>Edit static page content</small></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+          <div class="card" style="cursor:pointer" onclick="editPage('home')"><div class="card-body"><div style="font-size:1.5rem;margin-bottom:.5rem">🏠</div><div class="fw-600">Home Page</div><div class="text-muted" style="margin-top:.25rem">Hero, tagline, featured products</div></div></div>
+          <div class="card" style="cursor:pointer" onclick="editPage('about')"><div class="card-body"><div style="font-size:1.5rem;margin-bottom:.5rem">ℹ️</div><div class="fw-600">About Us</div><div class="text-muted" style="margin-top:.25rem">Company story, history, values</div></div></div>
+          <div class="card" style="cursor:pointer" onclick="editPage('contact')"><div class="card-body"><div style="font-size:1.5rem;margin-bottom:.5rem">📞</div><div class="fw-600">Contact Page</div><div class="text-muted" style="margin-top:.25rem">Address, phone, WhatsApp, map</div></div></div>
+          <div class="card" style="cursor:pointer" onclick="editPage('services')"><div class="card-body"><div style="font-size:1.5rem;margin-bottom:.5rem">🔧</div><div class="fw-600">Services</div><div class="text-muted" style="margin-top:.25rem">Custom orders, delivery, warranty</div></div></div>
+        </div>
+      </div>
+
+      <!-- ── MEDIA ── -->
+      <div class="page" id="page-media">
+        <div class="page-hdr">
+          <div><h1>Media Library</h1><small>All uploaded files</small></div>
+          <button class="btn btn-red" onclick="openModal('gallery-modal')">+ Upload</button>
+        </div>
+        <div id="media-list"></div>
+      </div>
+
+      <!-- ── SITE SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="page-hdr">
+          <div><h1>Site Settings</h1><small>Business info & contact details</small></div>
+          <button class="btn btn-red" onclick="saveSettings()">💾 Save & Publish</button>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><h3>Business Information</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>Business Name</label><input type="text" id="st-name" value="Cherry Furniture"/></div>
+              <div class="form-group"><label>Tagline</label><input type="text" id="st-tagline" placeholder="Since 1980 — Hyderabad's Finest Furniture"/></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Phone</label><input type="text" id="st-phone" placeholder="+92 300 000 0000"/></div>
+              <div class="form-group"><label>WhatsApp Number</label><input type="text" id="st-wa" placeholder="923001234567"/></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Email</label><input type="email" id="st-email" placeholder="info@cherryinterior.store"/></div>
+              <div class="form-group"><label>Instagram URL</label><input type="text" id="st-instagram" placeholder="https://instagram.com/..."/></div>
+            </div>
+            <div class="form-group"><label>Address</label><input type="text" id="st-address" placeholder="Main Market, Hyderabad, Sindh"/></div>
+            <div class="form-group"><label>Google Maps Embed URL</label><input type="text" id="st-maps" placeholder="https://maps.google.com/maps?..."/></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><h3>Change Admin Password</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>New Password</label><input type="password" id="st-newpw" placeholder="New admin password"/></div>
+              <div class="form-group"><label>Confirm Password</label><input type="password" id="st-confpw" placeholder="Confirm"/></div>
+            </div>
+            <button class="btn btn-dark" onclick="changeAdminPw()">Update Password</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── GITHUB ── -->
+      <div class="page" id="page-github">
+        <div class="page-hdr">
+          <div><h1>GitHub Connect</h1><small>Connect to your repository to publish changes live</small></div>
+          <button class="btn btn-green" id="gh-test-btn" onclick="testGitHub()">Test Connection</button>
+        </div>
+        <div id="gh-alerts"></div>
+        <div class="card">
+          <div class="card-hdr"><h3>Repository Settings</h3></div>
+          <div class="card-body">
+            <div class="alert alert-blue">
+              <strong>How it works:</strong> This panel writes your content as JSON/Markdown files directly to your GitHub repository.
+              Netlify detects the push and automatically rebuilds your live site. Changes go live in ~1 minute.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <div style="position:relative">
+                  <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="padding-right:60px"/>
+                  <button type="button" id="token-toggle-btn" onclick="toggleTokenVisibility()" style="position:absolute;right:0;top:0;bottom:0;background:var(--warm);border:none;border-left:1px solid var(--border);padding:0 12px;font-family:var(--font-ui);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer">Show</button>
+                </div>
+                <div class="text-muted" style="margin-top:4px">Create at github.com/settings/tokens → Classic → check <code>repo</code> scope. Token is stored locally in your browser only.</div>
+              </div>
+              <div class="form-group">
+                <label>Repository (owner/repo)</label>
+                <input type="text" id="gh-repo" placeholder="hrajput328/Cherry-furniture"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Branch</label>
+                <input type="text" id="gh-branch" placeholder="main" value="main"/>
+              </div>
+              <div class="form-group">
+                <label>Content Folder (where JSON files go)</label>
+                <input type="text" id="gh-folder" placeholder="_data" value="_data"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;margin-top:.5rem;align-items:center;flex-wrap:wrap">
+              <button class="btn btn-red" onclick="saveGHSettings()">💾 Save Settings</button>
+              <button class="btn btn-green" onclick="testGitHub()">Test Connection</button>
+              <button class="btn btn-outline" onclick="clearGHSettings()">🗑 Clear Saved Credentials</button>
+              <span id="gh-saved-info" style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-left:auto"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr"><h3>How to Set Up</h3></div>
+          <div class="card-body">
+            <div class="setup-steps">
+              <div class="setup-step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                  <h4>Get GitHub Token</h4>
+                  <p>Go to <strong>github.com → Settings → Developer Settings → Personal Access Tokens → Classic</strong>. Generate a new token with <strong>repo</strong> scope selected. Copy it and paste above.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                  <h4>Add Data Folder to Your Repo</h4>
+                  <p>In your <code>hrajput328/Cherry-furniture</code> repo, create a folder called <code>_data</code>. This panel will write all your content here as JSON files.</p>
+                  <code class="code-snippet">_data/catalogue.json<br>_data/blog.json<br>_data/gallery.json<br>_data/settings.json</code>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                  <h4>Read Data in Your Website</h4>
+                  <p>Add this to your site's JavaScript to fetch and display the data from GitHub:</p>
+                  <code class="code-snippet">fetch('/_data/catalogue.json')<br>  .then(r => r.json())<br>  .then(data => renderProducts(data))</code>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                  <h4>Auto-Deploy with Netlify</h4>
+                  <p>Your site on <strong>cherryinterior.store</strong> is already on Netlify. Every time this panel pushes to GitHub, Netlify automatically rebuilds and deploys. No extra config needed.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- ══ MODALS ═══════════════════════════════════════════════════ -->
+
+<!-- Product Modal -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal modal-lg">
+    <div class="modal-hdr"><h3 id="product-modal-title">Add Product</h3><button class="modal-x" onclick="closeModal('product-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="p-id"/>
+      <div class="form-row">
+        <div class="form-group"><label>Product Name *</label><input type="text" id="p-name" placeholder="Royal Bedroom Set"/></div>
+        <div class="form-group"><label>Category</label>
+          <select id="p-category">
+            <option>Bedroom</option><option>Dining</option><option>Living Room</option>
+            <option>Wardrobe</option><option>Office</option><option>Kids</option><option>Custom</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Price (Rs.)</label><input type="text" id="p-price" placeholder="85,000"/></div>
+        <div class="form-group"><label>Status</label>
+          <select id="p-status"><option value="available">Available</option><option value="order">On Order</option><option value="sold">Sold Out</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Description</label><textarea id="p-desc" rows="3" placeholder="Premium solid wood, hand-polished finish..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Material</label><input type="text" id="p-material" placeholder="Sheesham Wood, Fabric, Steel..."/></div>
+        <div class="form-group"><label>Dimensions</label><input type="text" id="p-dims" placeholder="6×4 ft, Height 3.5 ft"/></div>
+      </div>
+      <div class="form-group"><label>Product Image</label>
+        <div class="img-upload-zone" id="p-img-zone" onclick="document.getElementById('p-img-file').click()"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleImgDrop(event,'p-img-preview','p-img-data')">
+          <div style="font-size:2rem;margin-bottom:.5rem">📷</div>
+          <div style="font-size:11px;color:var(--muted)">Click or drag image here</div>
+          <input type="file" id="p-img-file" accept="image/*" style="display:none" onchange="handleImgSelect(this,'p-img-preview','p-img-data')"/>
+        </div>
+        <img id="p-img-preview" class="img-preview"/>
+        <input type="hidden" id="p-img-data"/>
+        <input type="text" id="p-img-url" placeholder="OR paste image URL here" style="margin-top:.5rem" oninput="previewImgFromUrl(this,'p-img-preview')"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>WhatsApp Enquiry Text</label><input type="text" id="p-wa-text" placeholder="I'm interested in the Royal Bedroom Set"/></div>
+        <div class="form-group"><label>Tags (comma-separated)</label><input type="text" id="p-tags" placeholder="bedroom, sheesham, custom"/></div>
+      </div>
+      <div class="form-group" style="display:flex;align-items:center;gap:.5rem">
+        <input type="checkbox" id="p-featured" style="width:auto"/>
+        <label style="display:inline;font-size:11px;text-transform:none;letter-spacing:0;color:var(--dark);margin:0">Featured on homepage</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('product-modal')">Cancel</button>
+      <button class="btn btn-red" onclick="saveProduct()">Save & Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Modal -->
+<div class="modal-overlay" id="blog-modal">
+  <div class="modal modal-lg">
+    <div class="modal-hdr"><h3 id="blog-modal-title">New Blog Post</h3><button class="modal-x" onclick="closeModal('blog-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="b-id"/>
+      <div class="form-group"><label>Post Title *</label><input type="text" id="b-title" placeholder="How to Choose the Right Bedroom Set"/></div>
+      <div class="form-row">
+        <div class="form-group"><label>Slug (URL)</label><input type="text" id="b-slug" placeholder="auto-generated from title"/></div>
+        <div class="form-group"><label>Category</label>
+          <select id="b-category"><option>Tips & Advice</option><option>New Arrivals</option><option>Inspiration</option><option>Behind the Scenes</option><option>News</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Excerpt / Summary</label><textarea id="b-excerpt" rows="2" placeholder="Short summary shown in blog listing..."></textarea></div>
+      <div class="form-group"><label>Cover Image</label>
+        <div class="img-upload-zone" onclick="document.getElementById('b-img-file').click()"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleImgDrop(event,'b-img-preview','b-img-data')">
+          <div style="font-size:2rem;margin-bottom:.5rem">🖼️</div>
+          <div style="font-size:11px;color:var(--muted)">Click or drag cover image</div>
+          <input type="file" id="b-img-file" accept="image/*" style="display:none" onchange="handleImgSelect(this,'b-img-preview','b-img-data')"/>
+        </div>
+        <img id="b-img-preview" class="img-preview"/>
+        <input type="hidden" id="b-img-data"/>
+        <input type="text" id="b-img-url" placeholder="OR paste image URL" style="margin-top:.5rem" oninput="previewImgFromUrl(this,'b-img-preview')"/>
+      </div>
+      <div class="form-group">
+        <label>Content</label>
+        <div class="editor-toolbar">
+          <button onclick="fmt('bold')"><b>B</b></button>
+          <button onclick="fmt('italic')"><i>I</i></button>
+          <button onclick="fmt('underline')"><u>U</u></button>
+          <button onclick="insertHeading()">H2</button>
+          <button onclick="insertList()">• List</button>
+          <button onclick="insertLink()">Link</button>
+          <button onclick="fmt('removeFormat')">Clear</button>
+        </div>
+        <div class="editor-area" id="b-content" contenteditable="true" placeholder="Write your blog post here..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Tags</label><input type="text" id="b-tags" placeholder="furniture, tips, bedroom"/></div>
+        <div class="form-group"><label>Status</label><select id="b-status"><option value="published">Published</option><option value="draft">Draft</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('blog-modal')">Cancel</button>
+      <button class="btn btn-dark" onclick="saveBlog('draft')">Save Draft</button>
+      <button class="btn btn-red" onclick="saveBlog('published')">Publish Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gallery Modal -->
+<div class="modal-overlay" id="gallery-modal">
+  <div class="modal">
+    <div class="modal-hdr"><h3>Upload Gallery Image</h3><button class="modal-x" onclick="closeModal('gallery-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="img-upload-zone" id="g-zone" onclick="document.getElementById('g-file').click()"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="handleImgDrop(event,'g-preview','g-data')">
+        <div style="font-size:2rem;margin-bottom:.5rem">📸</div>
+        <div style="font-size:11px;color:var(--muted)">Click or drag image(s) here</div>
+        <input type="file" id="g-file" accept="image/*" multiple style="display:none" onchange="handleImgSelect(this,'g-preview','g-data')"/>
+      </div>
+      <img id="g-preview" class="img-preview"/>
+      <input type="hidden" id="g-data"/>
+      <div class="form-row" style="margin-top:1rem">
+        <div class="form-group"><label>Caption</label><input type="text" id="g-caption" placeholder="Bedroom set in Latifabad project..."/></div>
+        <div class="form-group"><label>Category</label>
+          <select id="g-category"><option>Showroom</option><option>Projects</option><option>Products</option><option>Behind the Scenes</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('gallery-modal')">Cancel</button>
+      <button class="btn btn-red" onclick="saveGalleryImage()">Upload & Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Page Editor Modal -->
+<div class="modal-overlay" id="page-editor-modal">
+  <div class="modal modal-lg">
+    <div class="modal-hdr"><h3 id="pe-title">Edit Page</h3><button class="modal-x" onclick="closeModal('page-editor-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="pe-page-id"/>
+      <div id="pe-fields"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('page-editor-modal')">Cancel</button>
+      <button class="btn btn-red" onclick="savePageContent()">Save & Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- Commit bar (sticky bottom) -->
+<div class="commit-bar" id="commit-bar" style="display:none">
+  <div>
+    <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Unpublished Changes</div>
+    <div id="pending-changes-list" style="font-size:11px;color:rgba(255,255,255,.7)">—</div>
+  </div>
+  <input class="commit-input" id="commit-msg" placeholder="Describe your changes (e.g. Added 3 new products)"/>
+  <button class="btn btn-red" onclick="publishToGitHub()" id="publish-btn">
+    <span id="publish-spinner" class="spinner" style="display:none"></span>
+    ↑ Publish to Live Site
+  </button>
+  <button class="btn-ghost" onclick="discardPending()">Discard</button>
+</div>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────────
+const ADMIN_PW_KEY = 'cherry_admin_pw';
+const DATA_KEY     = 'cherry_admin_data';
+
+// ── HELPERS ──────────────────────────────────────────────────────
+const el  = id => document.getElementById(id);
+const v   = id => (el(id)?.value || '').trim();
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const dateStr = d => d ? new Date(d).toLocaleDateString('en-PK',{day:'numeric',month:'short',year:'numeric'}) : '—';
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+function openModal(id)  { el(id).classList.add('open'); }
+function closeModal(id) { el(id).classList.remove('open'); }
+
+// ── DATA STORE ───────────────────────────────────────────────────
+const DATA = {
+  get: () => { try { return JSON.parse(localStorage.getItem(DATA_KEY)||'{}'); } catch { return {}; } },
+  set: (key, val) => {
+    const d = DATA.get(); d[key] = val;
+    localStorage.setItem(DATA_KEY, JSON.stringify(d));
+  },
+  getKey: (key, def=[]) => { const d = DATA.get(); return d[key] ?? def; }
+};
+
+// ── AUTH ─────────────────────────────────────────────────────────
+function doAdminLogin() {
+  const pw = v('a-pass');
+  const stored = localStorage.getItem(ADMIN_PW_KEY) || 'cherry2024';
+  if (pw === stored) {
+    localStorage.setItem('cherry_auth', '1'); // Persist login across refreshes
+    el('login-screen').style.display = 'none';
+    el('app').classList.add('visible');
+    initAdmin();
+  } else {
+    el('a-err').style.display = 'block';
+    setTimeout(() => el('a-err').style.display='none', 3000);
+  }
+}
+el('a-pass').addEventListener('keydown', e => { if(e.key==='Enter') doAdminLogin(); });
+
+function changeAdminPw() {
+  const np = v('st-newpw'), cp = v('st-confpw');
+  if (!np) { alert('Enter a new password.'); return; }
+  if (np !== cp) { alert('Passwords do not match.'); return; }
+  localStorage.setItem(ADMIN_PW_KEY, np);
+  el('st-newpw').value=''; el('st-confpw').value='';
+  alert('✅ Password updated!');
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el('page-'+name)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes("'"+name+"'")) n.classList.add('active');
+  });
+  const renders = {
+    dashboard: renderDashboard, catalogue: renderCatalogue, blog: renderBlog,
+    gallery: renderGallery, media: renderMedia
+  };
+  if (renders[name]) renders[name]();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+function initAdmin() {
+  loadGHSettings();
+  loadSiteSettings();
+  renderDashboard();
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────
+function renderDashboard() {
+  const products = DATA.getKey('catalogue', []);
+  const posts    = DATA.getKey('blog', []);
+  const gallery  = DATA.getKey('gallery', []);
+  el('dash-catalogue-count').textContent = products.length;
+  el('dash-blog-count').textContent      = posts.length;
+  el('dash-gallery-count').textContent   = gallery.length;
+  const lastPush = localStorage.getItem('cherry_last_push');
+  el('dash-last-push').textContent = lastPush ? dateStr(lastPush) : 'Never';
+
+  const activity = JSON.parse(localStorage.getItem('cherry_activity')||'[]');
+  el('dash-activity').innerHTML = activity.length
+    ? activity.slice(0,8).map(a=>`<div style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--muted)">${a.time} — ${a.msg}</div>`).join('')
+    : '<div class="text-muted">No activity yet.</div>';
+
+  // GitHub status badge
+  const ghCfg = getGHConfig();
+  if (ghCfg.token && ghCfg.repo) {
+    el('gh-status').className = 'gh-status connected';
+    el('gh-status').textContent = '● ' + ghCfg.repo;
+  }
+}
+
+function logActivity(msg) {
+  const activity = JSON.parse(localStorage.getItem('cherry_activity')||'[]');
+  activity.unshift({ time: new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'}), msg });
+  localStorage.setItem('cherry_activity', JSON.stringify(activity.slice(0,20)));
+}
+
+// ── PENDING CHANGES ───────────────────────────────────────────────
+let pendingChanges = [];
+
+function markPending(description) {
+  if (!pendingChanges.includes(description)) pendingChanges.push(description);
+  el('commit-bar').style.display = 'flex';
+  el('pending-changes-list').textContent = pendingChanges.join(' · ');
+}
+
+function discardPending() {
+  pendingChanges = [];
+  el('commit-bar').style.display = 'none';
+}
+
+// ── CATALOGUE ────────────────────────────────────────────────────
+let catalogueFilter = { search: '', category: '' };
+
+function renderCatalogue() {
+  let items = DATA.getKey('catalogue', []);
+  if (catalogueFilter.search) items = items.filter(p => (p.name+p.category+p.tags).toLowerCase().includes(catalogueFilter.search.toLowerCase()));
+  if (catalogueFilter.category) items = items.filter(p => p.category === catalogueFilter.category);
+
+  el('catalogue-grid').innerHTML = items.length ? items.map(p => `
+    <div class="item-card">
+      <div class="item-card-img">${p.imageUrl||p.imageData ? `<img src="${p.imageUrl||p.imageData}" alt="${p.name}"/>` : '🛋️'}</div>
+      <div class="item-card-body">
+        ${p.featured ? '<span class="item-card-badge">⭐ Featured</span>' : ''}
+        <div class="item-card-title">${p.name}</div>
+        <div class="item-card-meta">${p.category} ${p.price ? '· Rs. '+p.price : ''}</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">${p.description?.slice(0,80)||''}${p.description?.length>80?'...':''}</div>
+        <div class="item-card-actions">
+          <span class="badge ${p.status==='available'?'badge-green':p.status==='order'?'badge-orange':'badge-gray'}">${p.status||'available'}</span>
+          <div style="margin-left:auto;display:flex;gap:4px">
+            <button class="btn btn-outline btn-sm" onclick="editProduct('${p.id}')">Edit</button>
+            <button class="btn btn-sm" style="background:#ffebee;color:var(--red);border:1px solid #ffcdd2" onclick="deleteProduct('${p.id}')">Del</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('')
+    : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🛋️</div><h3>No Products Yet</h3><p>Add your furniture catalogue items to display them on your website.</p><button class="btn btn-red" onclick="openModal('product-modal');clearProductForm()" style="margin-top:1rem">+ Add First Product</button></div>`;
+}
+
+function filterCatalogue(val) { catalogueFilter.search=val; renderCatalogue(); }
+function filterCatalogueCategory(val) { catalogueFilter.category=val; renderCatalogue(); }
+
+function clearProductForm() {
+  ['p-id','p-name','p-price','p-desc','p-material','p-dims','p-img-data','p-img-url','p-wa-text','p-tags'].forEach(id=>{const e=el(id);if(e)e.value='';});
+  el('p-category').value='Bedroom'; el('p-status').value='available';
+  el('p-featured').checked=false;
+  el('p-img-preview').style.display='none'; el('p-img-preview').src='';
+  el('product-modal-title').textContent='Add Product';
+}
+
+function saveProduct() {
+  const name = v('p-name'); if(!name){alert('Product name required.');return;}
+  const id = v('p-id') || uid();
+  const products = DATA.getKey('catalogue', []);
+  const idx = products.findIndex(p=>p.id===id);
+  const obj = {
+    id, name, category:v('p-category'), price:v('p-price'), description:v('p-desc'),
+    material:v('p-material'), dimensions:v('p-dims'), status:v('p-status'),
+    imageData:v('p-img-data'), imageUrl:v('p-img-url'),
+    waText:v('p-wa-text')||'I am interested in '+name,
+    tags:v('p-tags'), featured:el('p-featured').checked,
+    updatedAt:new Date().toISOString()
+  };
+  if(idx>=0) products[idx]=obj; else products.push(obj);
+  DATA.set('catalogue', products);
+  closeModal('product-modal');
+  renderCatalogue();
+  markPending(idx>=0?'Updated: '+name:'Added: '+name);
+  logActivity((idx>=0?'Updated':'Added')+' product: '+name);
+}
+
+function editProduct(id) {
+  const p = DATA.getKey('catalogue',[]).find(x=>x.id===id); if(!p) return;
+  clearProductForm();
+  el('p-id').value=p.id; el('p-name').value=p.name||''; el('p-price').value=p.price||'';
+  el('p-desc').value=p.description||''; el('p-material').value=p.material||'';
+  el('p-dims').value=p.dimensions||''; el('p-status').value=p.status||'available';
+  el('p-category').value=p.category||'Bedroom'; el('p-tags').value=p.tags||'';
+  el('p-wa-text').value=p.waText||''; el('p-featured').checked=!!p.featured;
+  el('p-img-url').value=p.imageUrl||'';
+  if(p.imageData||p.imageUrl){el('p-img-preview').src=p.imageData||p.imageUrl;el('p-img-preview').style.display='block';}
+  el('p-img-data').value=p.imageData||'';
+  el('product-modal-title').textContent='Edit: '+p.name;
+  openModal('product-modal');
+}
+
+function deleteProduct(id) {
+  if(!confirm('Delete this product?')) return;
+  const products = DATA.getKey('catalogue',[]).filter(p=>p.id!==id);
+  DATA.set('catalogue', products);
+  renderCatalogue();
+  markPending('Deleted a product');
+  logActivity('Deleted product');
+}
+
+// ── BLOG ─────────────────────────────────────────────────────────
+function renderBlog() {
+  const posts = DATA.getKey('blog', []);
+  el('blog-list').innerHTML = posts.length ? posts.map(p=>`
+    <div class="card" style="margin-bottom:.75rem">
+      <div class="card-body" style="display:flex;gap:1rem;align-items:flex-start">
+        ${p.imageUrl||p.imageData?`<img src="${p.imageUrl||p.imageData}" style="width:100px;height:70px;object-fit:cover;flex-shrink:0"/>`:
+          '<div style="width:100px;height:70px;background:var(--warm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem">📝</div>'}
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
+            <span class="badge ${p.status==='published'?'badge-green':'badge-gray'}">${p.status||'draft'}</span>
+            <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase">${p.category}</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin-bottom:.25rem">${p.title}</div>
+          <div style="font-size:11px;color:var(--muted)">${p.excerpt?.slice(0,100)||''}${p.excerpt?.length>100?'...':''}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;flex-shrink:0">
+          <button class="btn btn-outline btn-sm" onclick="editBlog('${p.id}')">Edit</button>
+          <button class="btn btn-sm" style="background:#ffebee;color:var(--red);border:1px solid #ffcdd2" onclick="deleteBlog('${p.id}')">Del</button>
+        </div>
+      </div>
+    </div>`).join('')
+    : `<div class="empty-state"><div class="empty-icon">📝</div><h3>No Blog Posts</h3><p>Share insights, new arrivals, and tips with your customers.</p><button class="btn btn-red" onclick="openModal('blog-modal');clearBlogForm()" style="margin-top:1rem">+ Write First Post</button></div>`;
+}
+
+function clearBlogForm() {
+  ['b-id','b-title','b-slug','b-excerpt','b-tags','b-img-data','b-img-url'].forEach(id=>{const e=el(id);if(e)e.value='';});
+  el('b-category').value='Tips & Advice'; el('b-status').value='published';
+  el('b-content').innerHTML=''; el('b-img-preview').style.display='none'; el('b-img-preview').src='';
+  el('blog-modal-title').textContent='New Blog Post';
+}
+
+function saveBlog(status) {
+  const title = v('b-title'); if(!title){alert('Post title required.');return;}
+  const id = v('b-id') || uid();
+  const posts = DATA.getKey('blog', []);
+  const idx = posts.findIndex(p=>p.id===id);
+  const obj = {
+    id, title, slug:v('b-slug')||slug(title), category:v('b-category'),
+    excerpt:v('b-excerpt'), content:el('b-content').innerHTML,
+    tags:v('b-tags'), status, imageData:v('b-img-data'), imageUrl:v('b-img-url'),
+    date:idx>=0?posts[idx].date:new Date().toISOString(), updatedAt:new Date().toISOString()
+  };
+  if(idx>=0) posts[idx]=obj; else posts.push(obj);
+  DATA.set('blog', posts);
+  closeModal('blog-modal');
+  renderBlog();
+  markPending(status==='published'?'Published: '+title:'Draft saved: '+title);
+  logActivity('Blog post '+(status==='published'?'published':'saved')+': '+title);
+}
+
+function editBlog(id) {
+  const p = DATA.getKey('blog',[]).find(x=>x.id===id); if(!p) return;
+  clearBlogForm();
+  el('b-id').value=p.id; el('b-title').value=p.title||''; el('b-slug').value=p.slug||'';
+  el('b-excerpt').value=p.excerpt||''; el('b-content').innerHTML=p.content||'';
+  el('b-category').value=p.category||'Tips & Advice'; el('b-status').value=p.status||'published';
+  el('b-tags').value=p.tags||''; el('b-img-url').value=p.imageUrl||'';
+  if(p.imageData||p.imageUrl){el('b-img-preview').src=p.imageData||p.imageUrl;el('b-img-preview').style.display='block';}
+  el('b-img-data').value=p.imageData||'';
+  el('blog-modal-title').textContent='Edit: '+p.title;
+  openModal('blog-modal');
+}
+
+function deleteBlog(id) {
+  if(!confirm('Delete this post?')) return;
+  DATA.set('blog', DATA.getKey('blog',[]).filter(p=>p.id!==id));
+  renderBlog(); markPending('Deleted a blog post');
+}
+
+// ── RICH TEXT EDITOR ──────────────────────────────────────────────
+function fmt(cmd) { document.execCommand(cmd,false,null); el('b-content').focus(); }
+function insertHeading() { document.execCommand('formatBlock',false,'h2'); el('b-content').focus(); }
+function insertList() { document.execCommand('insertUnorderedList',false,null); el('b-content').focus(); }
+function insertLink() {
+  const url = prompt('Enter URL:'); if(!url) return;
+  document.execCommand('createLink',false,url); el('b-content').focus();
+}
+// Auto-generate slug from title
+el('b-title') && el('b-title').addEventListener && el('b-title').addEventListener('input', function(){
+  if(!v('b-id')) el('b-slug').value = slug(this.value);
+});
+
+// ── GALLERY ──────────────────────────────────────────────────────
+function renderGallery() {
+  const imgs = DATA.getKey('gallery', []);
+  el('gallery-grid').innerHTML = imgs.length ? imgs.map(img=>`
+    <div style="position:relative;border:1px solid var(--border)">
+      <div style="width:100%;height:180px;background:var(--warm);overflow:hidden">
+        ${img.data||img.url?`<img src="${img.data||img.url}" style="width:100%;height:100%;object-fit:cover"/>`:
+          '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem;color:var(--border)">🖼️</div>'}
+      </div>
+      <div style="padding:.5rem .75rem;background:white">
+        <div style="font-size:10px;color:var(--muted);text-overflow:ellipsis;overflow:hidden;white-space:nowrap">${img.caption||'No caption'}</div>
+        <div style="display:flex;gap:4px;margin-top:.4rem">
+          <span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;background:var(--warm)">${img.category||'Gallery'}</span>
+          <button class="btn-ghost" style="font-size:9px;margin-left:auto;color:var(--red)" onclick="deleteGalleryImg('${img.id}')">Del</button>
+        </div>
+      </div>
+    </div>`).join('')
+    : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🖼️</div><h3>No Images</h3><p>Upload your showroom and project photos.</p></div>`;
+}
+
+function saveGalleryImage() {
+  const data = v('g-data'), url = '', caption = v('g-caption');
+  if(!data && !url){ alert('Upload an image first.'); return; }
+  const imgs = DATA.getKey('gallery', []);
+  imgs.push({id:uid(), data, url, caption, category:v('g-category'), date:new Date().toISOString()});
+  DATA.set('gallery', imgs);
+  closeModal('gallery-modal');
+  renderGallery();
+  markPending('Added gallery image: '+(caption||'untitled'));
+  logActivity('Added gallery image');
+  el('g-data').value=''; el('g-preview').src=''; el('g-preview').style.display='none';
+}
+
+function deleteGalleryImg(id) {
+  if(!confirm('Delete this image?')) return;
+  DATA.set('gallery', DATA.getKey('gallery',[]).filter(i=>i.id!==id));
+  renderGallery(); markPending('Deleted gallery image');
+}
+
+// ── MEDIA LIBRARY ────────────────────────────────────────────────
+function renderMedia() {
+  const all = [
+    ...DATA.getKey('gallery',[]).map(i=>({...i,type:'Gallery'})),
+    ...DATA.getKey('catalogue',[]).filter(p=>p.imageData||p.imageUrl).map(p=>({id:p.id,data:p.imageData,url:p.imageUrl,caption:p.name,type:'Product'})),
+    ...DATA.getKey('blog',[]).filter(b=>b.imageData||b.imageUrl).map(b=>({id:b.id,data:b.imageData,url:b.imageUrl,caption:b.title,type:'Blog'})),
+  ];
+  el('media-list').innerHTML = all.length
+    ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem">
+        ${all.map(item=>`<div style="border:1px solid var(--border)">
+          <div style="height:120px;overflow:hidden;background:var(--warm)">
+            ${item.data||item.url?`<img src="${item.data||item.url}" style="width:100%;height:100%;object-fit:cover"/>`:
+              '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--border);font-size:1.5rem">📄</div>'}
+          </div>
+          <div style="padding:.4rem .6rem;background:white">
+            <div style="font-size:9px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;color:var(--muted)">${item.caption||'—'}</div>
+            <span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;background:var(--warm)">${item.type}</span>
+          </div>
+        </div>`).join('')}
+      </div>`
+    : '<div class="empty-state"><div class="empty-icon">📁</div><h3>No Files</h3><p>Uploaded images appear here.</p></div>';
+}
+
+// ── PAGE EDITOR ───────────────────────────────────────────────────
+const pageFields = {
+  home: {
+    title: 'Home Page',
+    fields: [
+      {id:'hero-headline',label:'Hero Headline',type:'text',placeholder:'Crafting Homes Since 1980'},
+      {id:'hero-sub',label:'Hero Subheading',type:'text',placeholder:'Hyderabad\'s finest custom furniture'},
+      {id:'hero-btn',label:'Hero Button Text',type:'text',placeholder:'Explore Catalogue'},
+      {id:'featured-text',label:'Featured Section Text',type:'textarea',placeholder:'Our most popular designs...'},
+    ]
+  },
+  about: {
+    title: 'About Us',
+    fields: [
+      {id:'about-headline',label:'Headline',type:'text',placeholder:'Our Story'},
+      {id:'about-story',label:'Company Story',type:'textarea',rows:5,placeholder:'Founded in 1980...'},
+      {id:'about-mission',label:'Mission Statement',type:'textarea',placeholder:'To provide...'},
+    ]
+  },
+  contact: {
+    title: 'Contact Page',
+    fields: [
+      {id:'contact-address',label:'Full Address',type:'text',placeholder:'Main Market, Hyderabad'},
+      {id:'contact-phone',label:'Phone',type:'text'}, {id:'contact-wa',label:'WhatsApp',type:'text'},
+      {id:'contact-hours',label:'Business Hours',type:'text',placeholder:'Mon–Sat 9am–8pm'},
+    ]
+  },
+  services: {
+    title: 'Services',
+    fields: [
+      {id:'svc-custom',label:'Custom Orders Info',type:'textarea',placeholder:'We manufacture to your exact specifications...'},
+      {id:'svc-delivery',label:'Delivery Info',type:'textarea',placeholder:'Free delivery within Hyderabad...'},
+      {id:'svc-warranty',label:'Warranty Policy',type:'textarea',placeholder:'1-year manufacturing warranty...'},
+    ]
+  }
+};
+
+function editPage(pageId) {
+  const cfg = pageFields[pageId]; if(!cfg) return;
+  const saved = DATA.getKey('pages',{})[pageId]||{};
+  el('pe-title').textContent = 'Edit: '+cfg.title;
+  el('pe-page-id').value = pageId;
+  el('pe-fields').innerHTML = cfg.fields.map(f=>`
+    <div class="form-group">
+      <label>${f.label}</label>
+      ${f.type==='textarea'
+        ? `<textarea id="${f.id}" rows="${f.rows||3}" placeholder="${f.placeholder||''}">${saved[f.id]||''}</textarea>`
+        : `<input type="text" id="${f.id}" value="${saved[f.id]||''}" placeholder="${f.placeholder||''}"/>`}
+    </div>`).join('');
+  openModal('page-editor-modal');
+}
+
+function savePageContent() {
+  const pageId = v('pe-page-id'); if(!pageId) return;
+  const cfg = pageFields[pageId]; if(!cfg) return;
+  const pages = DATA.getKey('pages',{});
+  const data = {};
+  cfg.fields.forEach(f => { const e=el(f.id); if(e) data[f.id]=e.value||e.innerHTML; });
+  pages[pageId] = data;
+  DATA.set('pages', pages);
+  closeModal('page-editor-modal');
+  markPending('Updated page: '+cfg.title);
+  logActivity('Updated page: '+cfg.title);
+}
+
+// ── SETTINGS ─────────────────────────────────────────────────────
+function loadSiteSettings() {
+  const s = DATA.getKey('settings',{});
+  ['name','tagline','phone','wa','email','instagram','address','maps'].forEach(k=>{
+    const e = el('st-'+k); if(e) e.value = s[k]||'';
+  });
+}
+
+function saveSettings() {
+  const s = {};
+  ['name','tagline','phone','wa','email','instagram','address','maps'].forEach(k=>{
+    const e = el('st-'+k); if(e) s[k]=e.value;
+  });
+  DATA.set('settings', s);
+  markPending('Updated site settings');
+  logActivity('Updated site settings');
+  alert('✅ Settings saved!');
+}
+
+// ── IMAGE HANDLING ────────────────────────────────────────────────
+function handleImgSelect(input, previewId, dataId) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = el(previewId); const dataEl = el(dataId);
+    if(preview){ preview.src=e.target.result; preview.style.display='block'; }
+    if(dataEl) dataEl.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleImgDrop(event, previewId, dataId) {
+  event.preventDefault();
+  const file = event.dataTransfer?.files?.[0]; if(!file||!file.type.startsWith('image/')) return;
+  const fake = {files:[file], onchange:null};
+  handleImgSelect({files:[file]}, previewId, dataId);
+}
+
+function previewImgFromUrl(inp, previewId) {
+  const url = inp.value.trim();
+  const preview = el(previewId);
+  if(preview){ preview.src=url; preview.style.display=url?'block':'none'; }
+}
+
+// ── GITHUB ───────────────────────────────────────────────────────
+function getGHConfig() {
+  try { return JSON.parse(localStorage.getItem('cherry_gh')||'{}'); } catch { return {}; }
+}
+
+function saveGHSettings() {
+  const cfg = {
+    token: v('gh-token'), repo: v('gh-repo'),
+    branch: v('gh-branch')||'main', folder: v('gh-folder')||'_data',
+    savedAt: new Date().toISOString()
+  };
+  if(!cfg.token||!cfg.repo){ showGHAlert('Token and repository are both required.','red'); return; }
+  localStorage.setItem('cherry_gh', JSON.stringify(cfg));
+  // Inline saved confirmation (no disruptive alert)
+  const info = el('gh-saved-info');
+  if(info) { info.textContent = '✓ Saved at '+new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'}); }
+  showGHAlert('✅ GitHub settings saved to your browser. Click "Test Connection" to verify.','green');
+  el('gh-status').className='gh-status connected';
+  el('gh-status').textContent='● '+cfg.repo;
+  logActivity('Updated GitHub settings for: '+cfg.repo);
+}
+
+function loadGHSettings() {
+  const cfg = getGHConfig();
+  if(el('gh-token')) el('gh-token').value = cfg.token||'';
+  if(el('gh-repo'))  el('gh-repo').value  = cfg.repo||'';
+  if(el('gh-branch')) el('gh-branch').value = cfg.branch||'main';
+  if(el('gh-folder')) el('gh-folder').value = cfg.folder||'_data';
+  if(cfg.savedAt && el('gh-saved-info')) {
+    el('gh-saved-info').textContent = '✓ Last saved: '+dateStr(cfg.savedAt);
+  }
+  if(cfg.token && cfg.repo) {
+    el('gh-status').className='gh-status connected';
+    el('gh-status').textContent='● '+cfg.repo;
+  }
+}
+
+async function testGitHub() {
+  const cfg = getGHConfig();
+  if(!cfg.token||!cfg.repo){ showGHAlert('Enter token and repository first.','red'); return; }
+  const btn = el('gh-test-btn');
+  btn.innerHTML = '<span class="spinner"></span>Testing...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${cfg.repo}`, {
+      headers: { Authorization: `token ${cfg.token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    const data = await res.json();
+    if(res.ok) {
+      showGHAlert(`✅ Connected! Repo: ${data.full_name} | Branch: ${cfg.branch} | Private: ${data.private}`, 'green');
+      el('gh-status').className='gh-status connected';
+      el('gh-status').textContent='● '+data.full_name;
+      logActivity('GitHub connection verified: '+data.full_name);
+    } else {
+      showGHAlert('❌ Error: '+data.message, 'red');
+      el('gh-status').className='gh-status error';
+      el('gh-status').textContent='● Error';
+    }
+  } catch(e) {
+    showGHAlert('❌ Network error. Check token and try again.', 'red');
+  }
+  btn.innerHTML = 'Test Connection'; btn.disabled=false;
+}
+
+function showGHAlert(msg, type) {
+  const cls = type==='green'?'green':type==='blue'?'blue':'red';
+  el('gh-alerts').innerHTML = `<div class="alert alert-${cls}">${msg}</div>`;
+  setTimeout(()=>{ if(el('gh-alerts')) el('gh-alerts').innerHTML=''; }, 8000);
+}
+
+// ── PUBLISH TO GITHUB ─────────────────────────────────────────────
+async function publishToGitHub() {
+  const cfg = getGHConfig();
+  if(!cfg.token||!cfg.repo) {
+    alert('Connect GitHub first in Settings → GitHub Connect.');
+    showPage('github'); return;
+  }
+
+  const commitMsg = v('commit-msg') || 'Updated content via Cherry Admin';
+  const btn = el('publish-btn'); const spinner = el('publish-spinner');
+  btn.disabled=true; spinner.style.display='inline-block';
+  setProgress(10);
+
+  // Build files to push
+  const files = [
+    { path: cfg.folder+'/catalogue.json', content: JSON.stringify(DATA.getKey('catalogue',[]), null, 2) },
+    { path: cfg.folder+'/blog.json',      content: JSON.stringify(DATA.getKey('blog',[]), null, 2) },
+    { path: cfg.folder+'/gallery.json',   content: JSON.stringify(DATA.getKey('gallery',[]).map(g=>({...g,data:undefined,url:g.url||''})), null, 2) },
+    { path: cfg.folder+'/settings.json',  content: JSON.stringify(DATA.getKey('settings',{}), null, 2) },
+    { path: cfg.folder+'/pages.json',     content: JSON.stringify(DATA.getKey('pages',{}), null, 2) },
+  ];
+
+  let pushed = 0;
+  const headers = { Authorization:`token ${cfg.token}`, Accept:'application/vnd.github.v3+json', 'Content-Type':'application/json' };
+  const apiBase = `https://api.github.com/repos/${cfg.repo}/contents/`;
+
+  for (const file of files) {
+    try {
+      setProgress(10 + (pushed/files.length)*80);
+      // Get existing file SHA (needed for updates)
+      let sha = null;
+      const getRes = await fetch(apiBase+file.path, { headers });
+      if (getRes.ok) { const d=await getRes.json(); sha=d.sha; }
+      // Push file
+      const body = { message: commitMsg, content: btoa(unescape(encodeURIComponent(file.content))), branch: cfg.branch };
+      if(sha) body.sha = sha;
+      const putRes = await fetch(apiBase+file.path, { method:'PUT', headers, body:JSON.stringify(body) });
+      if(!putRes.ok) { const e=await putRes.json(); throw new Error(e.message); }
+      pushed++;
+    } catch(err) {
+      spinner.style.display='none'; btn.disabled=false; setProgress(0);
+      alert('❌ Error publishing '+file.path+'\n'+err.message+'\n\nCheck your token has repo write access.');
+      return;
+    }
+  }
+
+  setProgress(100);
+  localStorage.setItem('cherry_last_push', new Date().toISOString());
+  logActivity('Published to GitHub: '+commitMsg);
+  el('commit-msg').value='';
+  pendingChanges=[];
+  el('commit-bar').style.display='none';
+  spinner.style.display='none'; btn.disabled=false;
+  setTimeout(()=>setProgress(0), 2000);
+  renderDashboard();
+  alert(`✅ Published!\n${pushed} files pushed to ${cfg.repo}\nNetlify will rebuild your site in ~1 minute.\n\nLive at: cherryinterior.store`);
+}
+
+function setProgress(pct) {
+  const f = el('progress-fill'); if(f) f.style.width=pct+'%';
+}
+
+// ── KEYBOARD ─────────────────────────────────────────────────────
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+});
+
+// ── GITHUB TOKEN SHOW / HIDE ──────────────────────────────────────
+function toggleTokenVisibility() {
+  const inp = el('gh-token');
+  const btn = el('token-toggle-btn');
+  if (!inp || !btn) return;
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    inp.type = 'password';
+    btn.textContent = 'Show';
+  }
+}
+
+// ── CLEAR GITHUB CREDENTIALS ──────────────────────────────────────
+function clearGHSettings() {
+  if (!confirm('Remove saved GitHub credentials from this browser?\n\nYou will need to enter them again next time.')) return;
+  localStorage.removeItem('cherry_gh');
+  if(el('gh-token'))  { el('gh-token').value  = ''; el('gh-token').type='password'; }
+  if(el('token-toggle-btn')) el('token-toggle-btn').textContent = 'Show';
+  if(el('gh-repo'))   el('gh-repo').value   = '';
+  if(el('gh-branch')) el('gh-branch').value = 'main';
+  if(el('gh-folder')) el('gh-folder').value = '_data';
+  if(el('gh-saved-info')) el('gh-saved-info').textContent = '';
+  el('gh-status').className = 'gh-status';
+  el('gh-status').textContent = '⚪ Not Connected';
+  showGHAlert('GitHub credentials removed from this browser.', 'blue');
+  logActivity('Cleared GitHub settings');
+}
+
+// ── AUTO-LOGIN + PRE-LOGIN STATUS ─────────────────────────────────
+// Runs after DOM + all function definitions are ready.
+document.addEventListener('DOMContentLoaded', () => {
+  // Show GitHub connection status in topbar even before login
+  const ghCfg = getGHConfig();
+  if (ghCfg.token && ghCfg.repo) {
+    el('gh-status').className = 'gh-status connected';
+    el('gh-status').textContent = '● ' + ghCfg.repo;
+  }
+
+  // Auto-login if the user was previously authenticated in this browser.
+  // The flag is cleared when they click Sign Out. Token is never exposed
+  // in the source — it lives only in localStorage under 'cherry_gh'.
+  if (localStorage.getItem('cherry_auth') === '1') {
+    el('login-screen').style.display = 'none';
+    el('app').classList.add('visible');
+    initAdmin();
+  }
+});
+</script>
 </body>
 </html>
